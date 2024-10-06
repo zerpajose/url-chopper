@@ -4,25 +4,35 @@
   "description": "Url shortener service",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/index.js",
-    "dev": "ts-node-dev src/index.ts",
-    "gcp-build": "npm run build",
-    "lint": "ts-standard",
+    "preinstall": "npx only-allow pnpm",
+    "prettify": "prettier --write ./src",
+    "start": "pnpm build && node --env-file=.env dist/index.js",
+    "dev": "pnpm exec nodemon src/index.ts",
+    "gcp-build": "pnpm build",
+    "lint": "eslint .",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["url", "shortener"],
+  "keywords": [
+    "url",
+    "shortener"
+  ],
   "author": "Jose Zerpa",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.14",
-    "eslint": "8.57.0",
+    "@typescript-eslint/eslint-plugin": "^8.8.0",
+    "@typescript-eslint/parser": "^8.8.0",
+    "eslint": "9.12.0",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
     "ts-node-dev": "^2.0.0",
-    "ts-standard": "^12.0.1",
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "express": "4.21.0"
+    "@google-cloud/firestore": "^7.10.0",
+    "express": "4.21.0",
+    "zod": "^3.23.8"
   },
   "ts-standard": {
     "project": "./tsconfig.json"
