@@ -5,7 +5,7 @@
 // export type NewDiaryEntry = Omit<DiaryEntry, 'id'>
 
 export interface ShortUrl {
-  id: string
+  id: string;
   url: string;
   shortCode: string;
   createdAt?: string;

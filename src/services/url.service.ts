@@ -74,7 +74,7 @@ export async function updateShortUrl(shortCode: string, url: string) {
 
 export async function deleteShortUrl(shortCode: string) {
   const document = await collection.where('shortCode', '==', shortCode).get();
-  
+
   if (document.empty) {
     throw new Error('Short URL not found');
   }
