@@ -7,5 +7,12 @@
 export interface ShortUrl {
   id: string
   url: string;
-  shortCode: string; 
+  shortCode: string;
+  createdAt?: string;
+  updatedAt?: string;
+  accessCount?: number;
+}
+
+export interface CreateShortUrlInput {
+  url: string;
 }

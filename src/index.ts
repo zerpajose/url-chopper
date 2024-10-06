@@ -1,5 +1,5 @@
 import express from 'express';
-import shortUrlRouter from './routes/short-url';
+import shortUrlRouter from './routes/short-url.route';
 
 const app = express();
 
