@@ -1,7 +1,11 @@
 steps:
   - name: 'node'
     entrypoint: 'npm'
-    args: ['install -g pnpm']
+    args: [
+      'install',
+      '-g',
+      'pnpm',
+    ]
   - name: 'ubuntu'
     entrypoint: bash
     args: [
