@@ -1,0 +1,13 @@
+steps:
+  # Install dependencies
+  - name: 'ubuntu'
+    entrypoint: bash
+    args: ['-c', 'apt-get update && apt-get install -y nodejs pnpm']
+  - name: 'ubuntu'
+    entrypoint: bash
+    args: ['-c', 'pnpm i']
+
+  # Run unit tests
+  - name: 'ubuntu'
+    entrypoint: bash
+    args: ['-c', 'pnpm test']
