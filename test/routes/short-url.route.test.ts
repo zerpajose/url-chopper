@@ -1,93 +1,172 @@
-import { describe, it, mock } from "node:test";
-import assert from "node:assert";
+import { afterEach, expect, it, describe, vi } from 'vitest'
 import request from 'supertest';
 import express from 'express';
 import router from '../../src/routes/short-url.route';
 import * as urlService from '../../src/services/url.service';
-import { getShortUrl } from '../../src/services/url.service';
-// import {  } from '../../src/validations/url-service.shemas';
 
-// describe("formatFileSize function", () => {
-//   it('should return "1.00 GB" for sizeBytes = 1073741824', () => {
-//     assert.strictEqual(formatFileSize(1073741824), "1.00 GB");
-//   });
-// });
 const app = express();
 app.use(express.json());
-app.use('/short-url', router);
+app.use('/api/shorten', router);
 
 describe("GET /api/shorten/:shortCode", () => {
-  it("should update the short URL successfully", async (context) => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  });
+
+  it("[ERROR] document not found", async () => {
+    const shortCode = 'abc123';
+  
+    const response = await request(app)
+      .get(`/api/shorten/${shortCode}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Short URL not found');
+  });
+
+  it("[SUCCESS] should get the document successfully", async () => {
     const shortCode = 'abc123';
 
-    // const calcSomeValue = mock.module('../../src/services/url.service.ts', { namedExports: ['getShortUrl'] });
-    // calcSomeValue.mockImplementation(function mock__calcSomeValue() { return null });
+    const getShortUrlMock = vi.spyOn(urlService, 'getShortUrl');
 
-    const urlMock = context.mock.fn(urlService.getShortUrl, () => {
-      return {
-        id: '123',
-        url: 'https://example.com',
-        shortCode: 'abc123',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        accessCount: 0,
-      };
+    getShortUrlMock.mockResolvedValue({
+      id: '123',
+      url: 'https://example.com',
+      shortCode: 'abc123',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      accessCount: undefined,
     });
-    // urlMock.mock.mockImplementation(async () => {
-    //   return {
-    //     id: '123',
-    //     url: 'https://example.com',
-    //     shortCode: 'abc123',
-    //     createdAt: new Date().toISOString(),
-    //     updatedAt: new Date().toISOString(),
-    //     accessCount: 0,
-    //   };
-    // });
+  
+    const response = await request(app)
+      .get(`/api/shorten/${shortCode}`);
+    
+    expect(response.status).toBe(200);
+    expect(response.body.url).toBe('https://example.com');
+  });
 
-    // mock.method(urlService, 'getShortUrl', async () => {
-    //   return {
-    //     id: '123',
-    //     url: 'https://example.com',
-    //     shortCode: 'abc123',
-    //     createdAt: new Date().toISOString(),
-    //     updatedAt: new Date().toISOString(),
-    //     accessCount: 0,
-    //   };
-    // });
-
-    // updateShortUrl.mockResolvedValue({ shortCode, url: newUrl });
+  it("[ERROR] should return 400 for invalid url", async () => {
+    const invalidPaylod = { url: 'invalid-url' };
 
     const response = await request(app)
-      .get(`/short-url/${shortCode}`);
-    console.log('*******', response.body);
-    assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.body.url, 'https://example.com');
+      .post(`/api/shorten`)
+      .send(invalidPaylod);
+
+    expect(response.status).toBe(400);
+    expect(JSON.parse(response.body.message)[0].message).toBe('Invalid url');
+  });
+
+  it("[SUCCESS] should create the document successfully", async () => {
+    const requestPayload = { url: 'https://example.com' };
+
+    const createShortUrlMock = vi.spyOn(urlService, 'createShortUrl');
+
+    createShortUrlMock.mockResolvedValue({
+      id: '123',
+      url: 'https://example.com',
+      shortCode: 'abc123',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      accessCount: 0,
+    });
+  
+    const response = await request(app)
+      .post(`/api/shorten`)
+      .send(requestPayload);
+    
+    expect(response.status).toBe(200);
+    const { body } = response;
+    expect(body.url).toBe('https://example.com');
+  });
+
+  it("[ERROR] document not found", async () => {
+    const shortCode = 'abc123';
+    const newUrl = 'https://newurl.com';
+  
+    const response = await request(app)
+      .put(`/api/shorten/${shortCode}`)
+      .send({ url: newUrl });
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Short URL not found');
   });
   
-  // it("should update the short URL successfully", async () => {
-  //   const shortCode = 'abc123';
-  //   const newUrl = 'https://newurl.com';
+  it("[SUCCESS] should update the short URL successfully", async () => {
+    const shortCode = 'abc123';
+    const newUrl = 'https://newurl.com';
 
-  //   mock.method(urlService, 'getShortUrl', () => {
-  //     return {
-  //       id: '123',
-  //       url: 'https://example.com',
-  //       shortCode: 'abc123',
-  //       createdAt: new Date().toISOString(),
-  //       updatedAt: new Date().toISOString(),
-  //       accessCount: 0,
-  //     };
-  //   });
+    const updateShortUrlMock = vi.spyOn(urlService, 'updateShortUrl');
 
-  //   updateShortUrl.mockResolvedValue({ shortCode, url: newUrl });
+    updateShortUrlMock.mockResolvedValue({
+      id: '123',
+      url: 'https://newurl.com',
+      shortCode: 'abc123',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      accessCount: undefined,
+    });
 
-  //   const response = await request(app)
-  //     .put(`/short-url/${shortCode}`)
-  //     .send({ url: newUrl });
+    const response = await request(app)
+      .put(`/api/shorten/${shortCode}`)
+      .send({ url: newUrl });
 
-  //   assert.strictEqual(response.status, 200);
-  //   assert.strictEqual(response.body.url, newUrl);
-  // });
+    expect(response.status).toBe(200);
+    expect(response.body.url).toBe(newUrl);
+  });
+
+  it("[ERROR] document not found", async () => {
+    const shortCode = 'abc123';
+  
+    const response = await request(app)
+      .delete(`/api/shorten/${shortCode}`);
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Short URL not found');
+  });
+
+  it("[SUCCESS] should delete the document successfully", async () => {
+    const shortCode = 'abc123';
+
+    const deleteShortUrlMock = vi.spyOn(urlService, 'deleteShortUrl');
+
+    deleteShortUrlMock.mockResolvedValue();
+  
+    const response = await request(app)
+      .delete(`/api/shorten/${shortCode}`);
+    
+    expect(response.status).toBe(204);
+  });
+
+  it("[ERROR] stats document not found", async () => {
+    const shortCode = 'abc123';
+  
+    const response = await request(app)
+      .get(`/api/shorten/${shortCode}/stats`);
+
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Short URL not found');
+  });
+
+  it("[SUCCESS] should get stats for the document successfully", async () => {
+    const shortCode = 'abc123';
+
+    const getShortUrlStatsMock = vi.spyOn(urlService, 'getShortUrlStats');
+
+    getShortUrlStatsMock.mockResolvedValue({
+      id: '123',
+      url: 'https://example.com',
+      shortCode: 'abc123',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      accessCount: 1,
+    });
+  
+    const response = await request(app)
+      .get(`/api/shorten/${shortCode}/stats`);
+    
+    expect(response.status).toBe(200);
+    expect(response.body.url).toBe('https://example.com');
+    expect(response.body.accessCount).toBe(1);
+  });
 
   // it("should return 400 for invalid data", async () => {
   //   const shortCode = 'abc123';
@@ -98,7 +177,7 @@ describe("GET /api/shorten/:shortCode", () => {
   //   });
 
   //   const response = await request(app)
-  //     .put(`/short-url/${shortCode}`)
+  //     .put(`/api/shorten/${shortCode}`)
   //     .send({ url: invalidUrl });
 
   //   assert.strictEqual(response.status, 400);
@@ -114,7 +193,7 @@ describe("GET /api/shorten/:shortCode", () => {
   //   });
 
   //   const response = await request(app)
-  //     .put(`/short-url/${shortCode}`)
+  //     .put(`/api/shorten/${shortCode}`)
   //     .send({ url: newUrl });
 
   //   assert.strictEqual(response.status, 404);

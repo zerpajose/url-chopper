@@ -30,7 +30,7 @@ router.post('/', async (req: Request, res: Response) => {
 
     res.json(shortenedUrl);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message });
   } finally {
     res.end();
   }
@@ -45,7 +45,7 @@ router.put('/:shortCode', async (req: Request, res: Response) => {
 
     res.json(updatedShortUrl);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(404).send({ message: error.message });
   }
 });
 
@@ -57,7 +57,7 @@ router.delete('/:shortCode', async (req: Request, res: Response) => {
 
     res.sendStatus(204);
   } catch (error) {
-    res.status(404).send(error.message);
+    res.status(404).send({ message: error.message });
   }
 });
 
@@ -69,7 +69,7 @@ router.get('/:shortCode/stats', async (req: Request, res: Response) => {
 
     res.json(stats);
   } catch (error) {
-    res.status(404).send(error.message);
+    res.status(404).send({ message: error.message });
   }
 });
 
