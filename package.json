@@ -7,12 +7,12 @@
     "preinstall": "npx only-allow pnpm",
     "prettify": "prettier --write ./src",
     "start": "pnpm build && node --env-file=.env dist/index.js",
-    "dev": "pnpm exec nodemon src/index.ts",
+    "dev": "ts-node-dev src/index.ts",
     "gcp-build": "pnpm build",
     "lint": "eslint .",
     "build": "tsc",
-    "test": "tsc --noEmit && node --import tsx --test test/**/*.test.ts",
-    "coverage": "node --test --experimental-test-coverage"
+    "test": "vitest --config ./test/vitest.config.mts",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [
     "url",
@@ -25,13 +25,13 @@
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.8.0",
     "@typescript-eslint/parser": "^8.8.0",
+    "@vitest/coverage-v8": "2.1.2",
     "eslint": "9.12.0",
-    "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
     "supertest": "^7.0.0",
     "ts-node-dev": "^2.0.0",
-    "tsx": "^4.19.1",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "vitest": "^2.1.2"
   },
   "dependencies": {
     "@google-cloud/firestore": "^7.10.0",
