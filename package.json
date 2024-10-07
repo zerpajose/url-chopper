@@ -11,7 +11,7 @@
     "gcp-build": "pnpm build",
     "lint": "eslint .",
     "build": "tsc",
-    "test": "vitest --config ./test/vitest.config.mts",
+    "test": "vitest --run --config ./test/vitest.config.mts",
     "coverage": "vitest run --coverage"
   },
   "keywords": [
