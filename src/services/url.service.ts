@@ -49,8 +49,9 @@ export async function getShortUrl(shortCode: string) {
     accessCount: document.docs[0].data()?.accessCount + 1,
   });
 
-  const { accessCount, ...rest } = document.docs[0].data() as ShortUrl;
-  return responseDecorator(rest);
+  const data = document.docs[0].data() as ShortUrl;
+  delete data.accessCount;
+  return responseDecorator(data);
 }
 
 export async function updateShortUrl(shortCode: string, url: string) {
