@@ -1,16 +1,11 @@
 steps:
-  - name: 'node'
-    entrypoint: 'npm'
-    args: [
-      'install',
-      '-g',
-      'pnpm',
-    ]
-  - name: 'ubuntu'
-    entrypoint: bash
-    args: [
-      '-c',
-      'pnpm install && pnpm test',
-    ]
+  - name: 'node:latest'
+    entrypoint: 'bash'
+    args: 
+      - '-c'
+      - |
+        npm install -g pnpm &&
+        pnpm install &&
+        pnpm test
 options:
   logging: CLOUD_LOGGING_ONLY
