@@ -7,9 +7,15 @@ const collectionName = 'url-chopper';
 const collection = db.collection(collectionName);
 
 export async function createShortUrl(shortUrl: CreateShortUrlInput) {
+  const { url } = shortUrl;
+  const document = await collection.where('url', '==', url).get();
+
+  if (!document.empty) {
+    throw new Error('URL already exists, you can only update it');
+  }
+
   const id = randomUUID();
   const shortCode = generateRandomString();
-  const { url } = shortUrl;
 
   const docRef = collection.doc(id);
 

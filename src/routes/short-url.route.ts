@@ -8,17 +8,6 @@ import {
 } from '../services/url.service';
 import { createShortUrlSchema, updateShortUrlSchema } from '../validations/url-service.shemas';
 
-/*
- * Validation schemas
- * DB connection (firestore)
- * Error handling
- * Fails if url already exists
- * Fails if shrotCode already exists
- * Unit tests
- * Free account only 10 url's
- * Premium accounts, infinite urls
- */
-
 const router = express.Router();
 
 router.get('/:shortCode', async (req, res) => {
