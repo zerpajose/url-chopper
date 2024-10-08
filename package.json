@@ -6,7 +6,8 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "prettify": "prettier --write ./src",
-    "start": "pnpm build && node --env-file=.env dist/index.js",
+    "serve-local": "pnpm build && node --env-file=.env dist/index.js",
+    "start": "pnpm build && node dist/index.js",
     "dev": "ts-node-dev src/index.ts",
     "gcp-build": "pnpm build",
     "lint": "eslint .",
