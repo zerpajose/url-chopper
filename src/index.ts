@@ -5,7 +5,7 @@ const app = express();
 
 app.use(express.json());
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 app.get('/ping', (_req, res) => {
   console.log(`someone pinged here! ${new Date().toLocaleDateString()}`);
