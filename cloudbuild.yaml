@@ -17,14 +17,15 @@ steps:
         npm install -g pnpm &&
         pnpm install &&
         pnpm lint
-  - id: 'Node Start'
-    name: 'node:latest'
-    entrypoint: 'bash'
-    args: 
-      - '-c'
-      - |
-        npm install -g pnpm &&
-        pnpm install &&
-        pnpm start
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 
+           'us-central1-docker.pkg.dev/fourth-tiger-437722-i4/cloud-run-source-deploy/url-chopper:tag1', 
+           '.']
+
+  # Docker Push
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 
+           'us-central1-docker.pkg.dev/fourth-tiger-437722-i4/cloud-run-source-deploy/url-chopper:tag1']
 options:
   logging: CLOUD_LOGGING_ONLY
