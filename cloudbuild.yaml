@@ -17,5 +17,14 @@ steps:
         npm install -g pnpm &&
         pnpm install &&
         pnpm lint
+  - id: 'Node Start'
+    name: 'node:latest'
+    entrypoint: 'bash'
+    args: 
+      - '-c'
+      - |
+        npm install -g pnpm &&
+        pnpm install &&
+        pnpm start
 options:
   logging: CLOUD_LOGGING_ONLY
