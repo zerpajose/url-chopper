@@ -1,4 +1,4 @@
-ARG CLOUD_LOGGING_ONLY=true
+ARG logging=CLOUD_LOGGING_ONLY
 
 # Use the official Node.js image as the base image
 FROM node:20.18-alpine
