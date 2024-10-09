@@ -8,8 +8,11 @@ app.use(express.json());
 const PORT = process.env.PORT || 8080;
 
 app.get('/ping', (_req, res) => {
-  console.log(`someone pinged here! ${new Date().toLocaleDateString()}`);
-  res.json({ result: 'pong' });
+  res.json({
+    result: 'pong',
+    date: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
 });
 
 app.use('/api/shorten', shortUrlRouter);
