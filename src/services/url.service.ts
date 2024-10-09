@@ -15,7 +15,7 @@ export async function createShortUrl(shortUrl: CreateShortUrlInput) {
   }
 
   const id = randomUUID();
-  const shortCode = generateRandomString();
+  const shortCode = generateRandomString(); // Need to check if shortCode already exists in DB to avoid collision
 
   const docRef = collection.doc(id);
 
