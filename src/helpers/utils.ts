@@ -2,8 +2,8 @@ import * as crypto from 'crypto';
 import { ShortUrl } from '../types';
 
 const algorithm = 'aes-256-cbc';
-const key = crypto.randomBytes(32);
-const iv = crypto.randomBytes(16);
+const key = process.env.ENCRYPTION_SECRET || 'oM0ueiwngP0u1UYdxrO8A7Z0dUvKrZ9T';
+const iv = crypto.randomBytes(16).toString('base64').slice(0, 16);
 
 export function encrypt(text: string): string {
     const cipher = crypto.createCipheriv(algorithm, key, iv);

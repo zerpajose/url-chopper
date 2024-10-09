@@ -10,7 +10,8 @@ const collection = db.collection(collectionName);
 
 export async function issueToken(userInput: CreateTokenInput) {
   const { username } = userInput;
-  const secret = encrypt(randomBytes(64).toString('hex').substring(0, 64));
+  const secret = randomBytes(64).toString('hex').substring(0, 64);
+  const encryptedSecret = encrypt(secret);
 
   const secretId = randomUUID();
   const createdAt = new Date().toISOString();
@@ -19,7 +20,7 @@ export async function issueToken(userInput: CreateTokenInput) {
   const docRef = collection.doc(secretId);
 
   await docRef.set({
-    secret,
+    secret: encryptedSecret,
     username,
     createdAt,
     updatedAt,
@@ -59,8 +60,8 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
       secretId: string;
       secret: string;
     }
-    const jwt = decode(token);
-    const { secretId } = jwt as JwtDecoded;
+    const jwtDecoded = decode(token);
+    const { secretId } = jwtDecoded as JwtDecoded;
 
     const document = await collection.doc(secretId).get();
 
@@ -68,8 +69,9 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
       throw new Error('Api Key not found');
     }
 
-    const decoded = verify(token, decrypt(document.data()?.secret));
-    (req as CustomRequest).token = decoded;
+    const decriptedSecret = decrypt(document.data()?.secret);
+    const verifiedToken = verify(token, decriptedSecret);
+    (req as CustomRequest).token = verifiedToken;
 
     next();
   } catch (error) {
