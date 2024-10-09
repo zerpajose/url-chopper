@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { generateRandomString, responseDecorator } from '../utils';
+import { generateRandomString, responseDecorator } from '../helpers/utils';
 import { CreateShortUrlInput, ShortUrl } from '../types';
 import { db } from '../clients/firestore.client';
 

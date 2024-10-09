@@ -1,4 +1,4 @@
-import { ShortUrl } from './types';
+import { ShortUrl } from '../types';
 
 export function generateRandomString(length = 10): string {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
