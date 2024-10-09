@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { generateRandomString, responseDecorator } from '../src/utils';
-import { ShortUrl } from '../src/types';
+import { generateRandomString, responseDecorator } from '../../src/helpers/utils';
+import { ShortUrl } from '../../src/types';
 
 describe('generateRandomString', () => {
   it('should generate a string of default length 10', () => {

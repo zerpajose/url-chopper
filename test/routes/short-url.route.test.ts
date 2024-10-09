@@ -52,7 +52,7 @@ describe("GET /api/shorten/:shortCode", () => {
       .send(invalidPaylod);
 
     expect(response.status).toBe(400);
-    expect(JSON.parse(response.body.message)[0].message).toBe('Invalid url');
+    expect(response.body.message).toBe('Invalid url');
   });
 
   it("[SUCCESS] should create the document successfully", async () => {
