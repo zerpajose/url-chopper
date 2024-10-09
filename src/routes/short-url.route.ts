@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { translateError } from '../helpers/errors';
 import {
   getShortUrl,
   createShortUrl,
@@ -10,15 +11,14 @@ import { createShortUrlSchema, updateShortUrlSchema } from '../validations/url-s
 
 const router = express.Router();
 
-router.get('/:shortCode', async (req, res) => {
+router.get('/:shortCode', async (req: Request, res: Response) => {
   const { shortCode } = req.params;
   try {
     const shortUrl = await getShortUrl(shortCode);
-    return res.json(shortUrl);
+    res.json(shortUrl);
   } catch (error) {
-    return res.status(404).send({ message: error.message });
-  } finally {
-    res.end();
+    const errorTranslated = translateError(error);
+    res.status(errorTranslated.statusCode).send({ message: errorTranslated.message });
   }
 });
 
@@ -30,9 +30,8 @@ router.post('/', async (req: Request, res: Response) => {
 
     res.json(shortenedUrl);
   } catch (error) {
-    res.status(400).send({ message: error.message });
-  } finally {
-    res.end();
+    const errorTranslated = translateError(error);
+    res.status(errorTranslated.statusCode).send({ message: errorTranslated.message });
   }
 });
 
@@ -45,7 +44,8 @@ router.put('/:shortCode', async (req: Request, res: Response) => {
 
     res.json(updatedShortUrl);
   } catch (error) {
-    res.status(404).send({ message: error.message });
+    const errorTranslated = translateError(error);
+    res.status(errorTranslated.statusCode).send({ message: errorTranslated.message });
   }
 });
 
@@ -55,9 +55,10 @@ router.delete('/:shortCode', async (req: Request, res: Response) => {
 
     await deleteShortUrl(shortCode);
 
-    res.sendStatus(204);
+    res.status(204).send({ message: 'Short URL deleted' });
   } catch (error) {
-    res.status(404).send({ message: error.message });
+    const errorTranslated = translateError(error);
+    res.status(errorTranslated.statusCode).send({ message: errorTranslated.message });
   }
 });
 
@@ -69,7 +70,8 @@ router.get('/:shortCode/stats', async (req: Request, res: Response) => {
 
     res.json(stats);
   } catch (error) {
-    res.status(404).send({ message: error.message });
+    const errorTranslated = translateError(error);
+    res.status(errorTranslated.statusCode).send({ message: errorTranslated.message });
   }
 });
 
