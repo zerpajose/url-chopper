@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { translateError } from '../helpers/errors';
+import { authenticateToken } from '../services/auth.service';
 import {
   getShortUrl,
   createShortUrl,
@@ -7,11 +8,11 @@ import {
   deleteShortUrl,
   getShortUrlStats,
 } from '../services/url.service';
-import { createShortUrlSchema, updateShortUrlSchema } from '../validations/url-service.shemas';
+import { createShortUrlSchema, updateShortUrlSchema } from '../validations/url-service.schemas';
 
 const router = express.Router();
 
-router.get('/:shortCode', async (req: Request, res: Response) => {
+router.get('/:shortCode', authenticateToken, async (req: Request, res: Response) => {
   const { shortCode } = req.params;
   try {
     const shortUrl = await getShortUrl(shortCode);
@@ -22,7 +23,7 @@ router.get('/:shortCode', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { url } = createShortUrlSchema.parse(req.body);
 
@@ -35,7 +36,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-router.put('/:shortCode', async (req: Request, res: Response) => {
+router.put('/:shortCode', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { shortCode } = req.params;
     const { url } = updateShortUrlSchema.parse(req.body);
@@ -49,7 +50,7 @@ router.put('/:shortCode', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/:shortCode', async (req: Request, res: Response) => {
+router.delete('/:shortCode', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { shortCode } = req.params;
 
@@ -62,7 +63,7 @@ router.delete('/:shortCode', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/:shortCode/stats', async (req: Request, res: Response) => {
+router.get('/:shortCode/stats', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { shortCode } = req.params;
 
