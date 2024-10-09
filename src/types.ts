@@ -1,8 +1,5 @@
-// export type NonSensitiveInfoDiaryEntry = Pick<DiaryEntry, 'id' | 'date' | 'weather' | 'visibility'>
-
-// export type NonSensitiveInfoDiaryEntry = Omit<DiaryEntry, 'comment'>
-
-// export type NewDiaryEntry = Omit<DiaryEntry, 'id'>
+import { JwtPayload } from 'jsonwebtoken';
+import { Request } from 'express';
 
 export interface ShortUrl {
   id: string;
@@ -15,4 +12,24 @@ export interface ShortUrl {
 
 export interface CreateShortUrlInput {
   url: string;
+}
+
+export interface CreateTokenInput {
+  username: string;
+  passphrase?: string;
+}
+
+export interface GetTokenInput {
+  id: string;
+  username: string;
+  accessToken: string;
+}
+
+export interface User {
+  username: string;
+  passphrase?: string;
+}
+
+export interface CustomRequest extends Request {
+  token: string | JwtPayload;
 }
