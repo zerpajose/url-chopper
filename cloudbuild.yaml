@@ -1,18 +1,12 @@
 steps:
-  - id: 'Node Install'
-    name: 'node:latest'
-    entrypoint: 'bash'
-    args: 
-      - '-c'
-      - |
-        npm install -g pnpm &&
-        pnpm install
   - id: 'Node Test'
     name: 'node:latest'
     entrypoint: 'bash'
     args: 
       - '-c'
       - |
+        npm install -g pnpm &&
+        pnpm install &&
         pnpm test
   - id: 'Node Lint'
     name: 'node:latest'
@@ -20,6 +14,8 @@ steps:
     args: 
       - '-c'
       - |
+        npm install -g pnpm &&
+        pnpm install &&
         pnpm lint
 options:
   logging: CLOUD_LOGGING_ONLY
