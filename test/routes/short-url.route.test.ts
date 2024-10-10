@@ -1,16 +1,26 @@
-import { afterEach, expect, it, describe, vi } from 'vitest'
+import { afterEach, expect, it, describe, vi, beforeEach } from 'vitest'
 import request from 'supertest';
 import express from 'express';
 import router from '../../src/routes/short-url.route';
+import { authenticateToken } from '../../src/services/auth.service';
 import * as urlService from '../../src/services/url.service';
 
 const app = express();
 app.use(express.json());
 app.use('/api/shorten', router);
 
+const accessToken = 'legit';
+
 describe("GET /api/shorten/:shortCode", () => {
+  beforeEach(() => {
+    vi.mock('../../src/services/auth.service', () => ({
+      authenticateToken: vi.fn((req, res, next) => next()),
+    }));
+  });
+
   afterEach(() => {
-    vi.restoreAllMocks()
+    expect(authenticateToken).toHaveBeenCalled();
+    vi.restoreAllMocks();
   });
 
   it("[ERROR] document not found", async () => {
@@ -161,7 +171,10 @@ describe("GET /api/shorten/:shortCode", () => {
     });
   
     const response = await request(app)
-      .get(`/api/shorten/${shortCode}/stats`);
+      .get(`/api/shorten/${shortCode}/stats`)
+      .set('Authorization', `Bearer ${accessToken}`);
+
+    console.log(response.error);
     
     expect(response.status).toBe(200);
     expect(response.body.url).toBe('https://example.com');
