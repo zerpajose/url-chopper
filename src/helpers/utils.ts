@@ -1,22 +1,22 @@
-import * as crypto from 'crypto';
+import { randomBytes, createCipheriv, createDecipheriv } from 'crypto';
 import { ShortUrl } from '../types';
 
 const algorithm = 'aes-256-cbc';
 const key = process.env.ENCRYPTION_SECRET || 'oM0ueiwngP0u1UYdxrO8A7Z0dUvKrZ9T';
-const iv = crypto.randomBytes(16).toString('base64').slice(0, 16);
+const iv = randomBytes(16).toString('base64').slice(0, 16);
 
 export function encrypt(text: string): string {
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
-    let encrypted = cipher.update(text, 'utf-8', 'hex');
-    encrypted += cipher.final('hex');
-    return encrypted;
+  const cipher = createCipheriv(algorithm, key, iv);
+  let encrypted = cipher.update(text, 'utf-8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
 }
 
 export function decrypt(encryptedText: string): string {
-    const decipher = crypto.createDecipheriv(algorithm, key, iv);
-    let decrypted = decipher.update(encryptedText, 'hex', 'utf-8');
-    decrypted += decipher.final('utf-8');
-    return decrypted;
+  const decipher = createDecipheriv(algorithm, key, iv);
+  let decrypted = decipher.update(encryptedText, 'hex', 'utf-8');
+  decrypted += decipher.final('utf-8');
+  return decrypted;
 }
 
 export function generateRandomString(length = 10): string {

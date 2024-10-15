@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateRandomString, responseDecorator } from '../../src/helpers/utils';
+import { generateRandomString, responseDecorator, encrypt, decrypt } from '../../src/helpers/utils';
 import { ShortUrl } from '../../src/types';
 
 describe('generateRandomString', () => {
@@ -41,5 +41,20 @@ describe('responseDecorator', () => {
       updatedAt: shortUrl.updatedAt,
       accessCount: shortUrl.accessCount,
     });
+  });
+});
+
+describe('Encryption and Decryption', () => {
+  it('should encrypt text', () => {
+    const text = 'topSecretText';
+    const encrypted = encrypt(text);
+    expect(decrypt(encrypted)).toBe('topSecretText');
+  });
+
+  it('should decrypt text', () => {
+    const toBeEncrypted = 'topSecretToBeEncryptedText';
+    const encryptedText = encrypt(toBeEncrypted);
+    const decrypted = decrypt(encryptedText);
+    expect(decrypted).toBe('topSecretToBeEncryptedText');
   });
 });
