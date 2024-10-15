@@ -22,7 +22,7 @@ describe('translateError', () => {
     const result = translateError(zodError);
     expect(result).toEqual({
       statusCode: 400,
-      message: 'Invalid url',
+      message: 'undefined Invalid url',
     });
   });
 

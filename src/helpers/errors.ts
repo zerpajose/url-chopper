@@ -8,13 +8,26 @@ export function translateError(error: Error | ZodError) {
         message: error.message,
       };
     }
+    if (error.message === 'No token provided') {
+      return {
+        statusCode: 401,
+        message: error.message,
+      };
+    }
   }
   if (error.name === 'ZodError') {
     const err = error as ZodError;
-    if (err.issues[0].message === 'Invalid url') {
+    const zodErrorMessage = parseZodErrorMessage(err);
+    if (err.issues[0].message === 'Invalid url' || err.issues[0].message === 'Required') {
       return {
         statusCode: 400,
-        message: err.issues[0].message,
+        message: zodErrorMessage,
+      };
+    }
+    if (err.issues[0].message === 'Invalid token') {
+      return {
+        statusCode: 401,
+        message: zodErrorMessage,
       };
     }
   }
@@ -22,4 +35,10 @@ export function translateError(error: Error | ZodError) {
     statusCode: 520,
     message: error.message,
   };
+}
+
+function parseZodErrorMessage(error: ZodError) {
+  const errorMessage = error.issues[0].message;
+  const errorPath = error.issues[0].path[0];
+  return `${errorPath} ${errorMessage}`;
 }
